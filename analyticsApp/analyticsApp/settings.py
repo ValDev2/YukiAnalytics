@@ -27,6 +27,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'frontend',
+    'User',
+    'Notes',
+    'Matiere',
 ]
 
 MIDDLEWARE = [
@@ -65,8 +68,12 @@ WSGI_APPLICATION = 'analyticsApp.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'yukidb',
+        'USER': 'postgres',
+        'PASSWORD': 'Valentinleboss2',
+        'HOST' : 'localhost',
+        'PORT' : '5433',
     }
 }
 
@@ -108,3 +115,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+#Authentication
+AUTH_USER_MODEL = "User.User"
