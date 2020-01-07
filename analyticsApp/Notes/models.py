@@ -1,10 +1,41 @@
 from django.db import models
 from django.conf import settings
-from django.contrib.contenttypes.fields import GenericForeignKey
-from django.contrib.contenttypes.models import ContentType
 from django.core.validators import MaxValueValidator, MinValueValidator
 
-# Create your models here.
+
+#Ecrire les méthodes de queryset ici :
+class NoteQuerySet(models.QuerySet):
+    def matiere(self, matiere):
+        return self.filter(matiere=matiere)
+
+    def below_average(self):
+        return self.filter(note__lt=10)
+
+    def above_average(self):
+        return self.filter(note__gt=10)
+
+    def user(self, user):
+        return self.filter(user=user)
+
+
+#Appeer les méthodes de querySet ici :
+class NoteManager(models.Manager):
+    #Permet d'utiliser les méthodes de Queryset définies en haut
+    def get_queryset(self):
+        return NoteQuerySet(self.model, using=self._db)
+
+    def matiere(self, matiere):
+        return self.get_queryset().matiere(matiere)
+
+    def below_average(self):
+        return self.get_queryset().below_average()
+
+    def above_average(self):
+        return self.get_queryset().above_average()
+
+    def user(self, user):
+        return self.get_queryset().user()
+
 
 class Note(models.Model):
     note = models.FloatField(
@@ -21,9 +52,12 @@ class Note(models.Model):
     date = models.DateTimeField(auto_now_add=True)
 
     #Generic Relation
-    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
-    object_id = models.PositiveIntegerField()
-    content_object = GenericForeignKey()
+    matiere = models.ForeignKey(
+        'Matiere.Matiere',
+        on_delete = models.CASCADE,
+        default=1
+    )
+    objects = NoteManager()
 
     def __str__(self):
         return f"{self.note} coefficient {self.coefficient}"
