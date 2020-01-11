@@ -9,4 +9,10 @@ from rest_framework.permissions import IsAdminUser
 class MatiereListView(generics.ListCreateAPIView):
     queryset = Matiere.objects.all()
     serializer_class = MatiereSerializer
+    permission_classes = []
+
+class MatiereDetailView(generics.RetrieveAPIView):
+    queryset = Matiere.objects.all()
+    serializer_class = MatiereSerializer
     permission_classes = [IsAdminUser]
+    lookup_field = "slug"

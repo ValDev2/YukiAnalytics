@@ -32,6 +32,11 @@ INSTALLED_APPS = [
     'Matiere',
 ]
 
+REST_FRAMEWORK = {
+    'EXCEPTION_HANDLER': 'analyticsApp.exceptions.base_exception_handler'
+}
+
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',

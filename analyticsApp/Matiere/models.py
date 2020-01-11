@@ -74,6 +74,7 @@ class Matiere(models.Model):
         on_delete=models.CASCADE
     )
     slug = models.SlugField(
+        blank=True,
         unique=True
     )
     objects = MatiereManager()
@@ -88,13 +89,17 @@ class Matiere(models.Model):
         self.slug = slugify(self.nom)
         return super(Matiere, self).save(*args, **kwargs)
 
+    @property
     def notes(self):
         return Note.objects.matiere(matiere=self)
-
+        
+    @property
     def moyenne(self):
         if self.notes().count() > 0:
             total = 0
+            div = 0
             for note in self.notes():
                 total += (note.note * note.coefficient)
-            return round(total / self.notes().count(), 2)
+                div += note.coefficient
+            return round(total / div, 2)
         return "Aucune note pour le moment"

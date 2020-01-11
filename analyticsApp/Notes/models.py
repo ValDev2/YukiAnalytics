@@ -2,7 +2,6 @@ from django.db import models
 from django.conf import settings
 from django.core.validators import MaxValueValidator, MinValueValidator
 
-
 #Ecrire les méthodes de queryset ici :
 class NoteQuerySet(models.QuerySet):
     def matiere(self, matiere):
@@ -39,11 +38,11 @@ class NoteManager(models.Manager):
 
 class Note(models.Model):
     note = models.FloatField(
-        default=10
+        default=10,
+        validators=[MaxValueValidator(20), MinValueValidator(0)]
     )
     coefficient = models.PositiveIntegerField(
         default=1,
-        validators=[MaxValueValidator(20), MinValueValidator(0)]
     )
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -61,3 +60,11 @@ class Note(models.Model):
 
     def __str__(self):
         return f"{self.note} coefficient {self.coefficient}"
+
+    @property
+    def get_nom_matiere(self):
+        return self.matiere.nom
+
+    @property
+    def get_username(self):
+        return self.user.username

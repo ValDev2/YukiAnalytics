@@ -8,4 +8,4 @@ from rest_framework.permissions import IsAdminUser
 class NotesListView(generics.ListCreateAPIView):
     queryset = Note.objects.all()
     serializer_class = NoteSerializer
-    permission_classes = [IsAdminUser]
+    permission_classes = []
