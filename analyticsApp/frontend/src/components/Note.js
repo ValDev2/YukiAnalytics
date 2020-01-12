@@ -18,9 +18,9 @@ const styles = {
 
 class Note extends Component {
 
-  render(){
+  
 
-    console.log(this.props)
+  render(){
     const { classes } = this.props
     return(
       <div className={classes.main}>
@@ -28,6 +28,7 @@ class Note extends Component {
         <p>coef : {this.props.coefficient}</p>
         <p>{this.props.matiere}</p>
         <p id="date">{new Date(this.props.timestamp).toDateString()}</p>
+        <p>X</p>
       </div>
     )
   }

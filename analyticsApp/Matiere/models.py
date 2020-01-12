@@ -89,10 +89,10 @@ class Matiere(models.Model):
         self.slug = slugify(self.nom)
         return super(Matiere, self).save(*args, **kwargs)
 
-    @property
     def notes(self):
-        return Note.objects.matiere(matiere=self)
-        
+        print(Note.objects.all())
+        return Note.objects.all()
+
     @property
     def moyenne(self):
         if self.notes().count() > 0:

@@ -1,6 +1,8 @@
 from rest_framework import serializers
 from .models import Matiere
 from django.template.defaultfilters import slugify
+from Notes.serializers import NoteSerializer
+from Notes.models import Note
 
 class MatiereSerializer(serializers.ModelSerializer):
 
@@ -18,6 +20,4 @@ class MatiereSerializer(serializers.ModelSerializer):
         return Matiere.objects.create(**data)
 
     def get_notes(self, obj):
-        from Notes.serializers import NoteSerializer
-        notes = obj.notes
-        return NoteSerializer(notes).data
+        return NoteSerializer(Note.objects.filter(matiere=obj.id), many=True).data
