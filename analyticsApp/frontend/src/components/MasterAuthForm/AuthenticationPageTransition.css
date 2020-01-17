@@ -1,0 +1,15 @@
+.alert-enter {
+  opacity: 0;
+}
+.alert-enter-active {
+  opacity: 1;
+  transition: opacity 300ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+.alert-exit {
+  opacity: 0;
+}
+
+.alert-exit-active {
+  opacity: 1;
+  transition: opacity 300ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}

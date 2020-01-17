@@ -7,8 +7,13 @@ import {
 import axios from 'axios';
 import { slugify } from '../utils/slug.js';
 
+const header = {
+  Authorization : "Token "+window.localStorage.getItem("token")
+}
+
+
 export const get_all_matieres = () => dispatch => {
-  axios.get("/api/matieres")
+  axios.get("/api/matieres", {headers:header})
     .then(res => {
       console.log(res.data);
       dispatch({

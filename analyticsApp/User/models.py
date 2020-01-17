@@ -40,7 +40,7 @@ class User(AbstractUser):
     def __str__(self):
         return self.username
 
-    def save(*args, **kwargs):
+    def save(self, *args, **kwargs):
         return super(User, self).save(*args, **kwargs)
 
     def get_matieres(self):
