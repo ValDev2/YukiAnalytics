@@ -16,4 +16,4 @@ class UserDetailView(generics.RetrieveUpdateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     lookup_fields = "pk"
-    permission_classes = [IsAuthenticated, ]
+    permission_classes = [IsAuthenticated,]

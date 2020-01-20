@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import User
+from rest_framework.authtoken.models import Token
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -15,3 +16,9 @@ class UserSerializer(serializers.ModelSerializer):
         user.set_password(validated_data["password"])
         user.save()
         return user
+
+
+class CustomTokenSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Token
+        fields = ('user')

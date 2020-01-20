@@ -3,6 +3,9 @@ import { withStyles } from '@material-ui/styles';
 import { CSSTransition } from 'react-transition-group';
 import AuthenticationForm from './AuthenticationForm/AuthenticationForm';
 import './AuthenticationPageTransition.css';
+import {
+  authCheckState
+} from '../../actions/authentication';
 
 const styles = {
   LoginPage: {
@@ -30,6 +33,7 @@ class LoginPage extends Component{
     this.handleToogleForm = this.handleToogleForm.bind(this);
   }
 
+
   handleToogleForm = () => {
     this.setState({
       showLoginForm: !this.state.showLoginForm
@@ -50,6 +54,8 @@ class LoginPage extends Component{
               classNames="alert"
             >
               <AuthenticationForm
+                logout={this.props.logout}
+                authLogin={this.props.authLogin}
                 showLoginForm={this.state.showLoginForm}
                 toogleForm={this.handleToogleForm}
               />
@@ -61,5 +67,7 @@ class LoginPage extends Component{
     );
   }
 }
+
+
 
 export default withStyles(styles)(LoginPage);

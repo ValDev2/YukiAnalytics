@@ -56,6 +56,12 @@ REST_FRAMEWORK = {
     ],
 }
 
+REST_AUTH_SERIALIZERS = {
+    'TOKEN_SERIALIZER': 'analyticsApp.serializers.CustomTokenSerializer'
+}
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
 
 MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',

@@ -2,7 +2,13 @@ import React, { Component } from 'react';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/styles';
-
+import { connect } from 'react-redux';
+import {
+  authCheckState,
+  logout,
+  authLogin,
+  authRegister
+} from '../../../actions/authentication';
 
 const styles = {
   formSection: {
@@ -115,10 +121,15 @@ class AuthenticationForm extends Component {
       usernameRegister: "",
       emailRegister: "",
       password1Register: "",
-      password2Register: ""
+      password2Register: "",
     }
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.clearForm = this.clearForm.bind(this);
+  }
+
+  componentDidMount(){
+    this.props.onTryAutoSignin()
   }
 
   handleChange = e => {
@@ -131,18 +142,28 @@ class AuthenticationForm extends Component {
   handleSubmit = e => {
     e.preventDefault();
     this.props.showLoginForm ? (
-      console.log({
-        username: this.state.usernameLogin,
-        password: this.state.passwordLogin
-      })
+      this.props.authLogin(this.state.usernameLogin,this.state.passwordLogin)
     ) : (
-      console.log({
-        username: this.state.usernameRegister,
-        email: this.state.emailRegister
-      })
+      this.props.authRegister(
+        this.state.usernameRegister,
+        this.state.emailRegister,
+        this.state.password1Register,
+        this.state.password2Register
+      )
     )
+    this.clearForm();
   }
 
+  clearForm = e => {
+    this.setState({
+      usernameLogin: "",
+      passwordLogin: "",
+      usernameRegister: "",
+      emailRegister: "",
+      password1Register: "",
+      password2Register: ""
+    })
+  }
 
   render(){
     const { classes } = this.props;
@@ -286,6 +307,10 @@ class AuthenticationForm extends Component {
                       onChange={this.handleChange}
                       value={this.state.password2Register}
                       label="Vérification du mot de passe"
+                      error={this.state.password1Register !== this.state.password2Register}
+                      helperText={(this.state.password1Register !== this.state.password2Register) && this.state.password2Register ? (
+                        "Les mots de passent doivent être identiques"
+                      ) : ("")}
                       InputLabelProps={{
                        className: classes.inputLabelText
                       }}
@@ -321,4 +346,19 @@ class AuthenticationForm extends Component {
   }
 }
 
-export default withStyles(styles)(AuthenticationForm);
+const mapStateToProps = state => {
+  return {
+    error: state.authentication.error
+  }
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+    onTryAutoSignin: () => dispatch(authCheckState()),
+    authLogin: (username, password) => dispatch(authLogin(username, password)),
+    logout: () => dispatch(logout()),
+    authRegister: (username, email, password1, password2) => dispatch(authRegister(username, email, password1, password2))
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(AuthenticationForm));
