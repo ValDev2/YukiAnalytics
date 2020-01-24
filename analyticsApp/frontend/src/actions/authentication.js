@@ -57,7 +57,6 @@ const registerFailure = error => ({
   }
 })
 
-
 export const authRegister = (username, email, password1, password2) => dispatch => {
   dispatch(registerStarted());
   const user_obj = {

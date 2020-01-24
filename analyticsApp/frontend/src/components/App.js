@@ -1,22 +1,35 @@
 import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
+import { BrowserRouter, Route, Link, Switch } from "react-router-dom";
+import ProtectedRoute from './commons/ProtectedRoute';
 import store from '../store.js';
-import LoginPage from './MasterAuthForm/AuthenticationPage';
-import { loadUser } from '../actions/authentication';
+import { loadUser, authCheckState } from '../actions/authentication';
+import LoginPage from './Authentication/AuthenticationPage';
+import Dashboard from './Dashboard/Dashboard';
+
 
 class App extends Component {
 
   componentDidMount(){
+    store.dispatch(authCheckState());
     store.dispatch(loadUser());
   }
+
   render(){
     return(
-      <Provider store={store}>
-        <div>
-          <LoginPage />
-        </div>
-      </Provider>
+        <Provider store={store}>
+          <BrowserRouter>
+            <div>
+              <Switch>
+                <Route exact path="/login">
+                  <LoginPage />
+                </Route>
+                <ProtectedRoute exact path="/" component={Dashboard} />
+              </Switch>
+            </div>
+          </BrowserRouter>
+        </Provider>
     )
   }
 }

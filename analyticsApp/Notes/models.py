@@ -16,7 +16,6 @@ class NoteQuerySet(models.QuerySet):
     def user(self, user):
         return self.filter(user=user)
 
-
 #Appeer les méthodes de querySet ici :
 class NoteManager(models.Manager):
     #Permet d'utiliser les méthodes de Queryset définies en haut

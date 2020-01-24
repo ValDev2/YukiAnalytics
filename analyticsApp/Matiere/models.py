@@ -4,7 +4,6 @@ from Notes.models import Note
 from django.core.exceptions import ValidationError
 from django.template.defaultfilters import slugify
 
-
 #Queryset methods
 class MatiereQuerySet(models.QuerySet):
     def user(self, user):
@@ -18,6 +17,9 @@ class MatiereQuerySet(models.QuerySet):
 
     def difficulte(self, difficulte):
         return self.filter(difficulte=difficulte.lower())
+
+    def semestre(self, semestre):
+        return self.filter(semestre=semestre)
 
 #call queryset methods
 class MatiereManager(models.Manager):
@@ -36,6 +38,9 @@ class MatiereManager(models.Manager):
     def difficulte(self, difficulte):
         return self.get_queryset().difficulte(difficulte)
 
+    def semestre(self, semestre):
+        return self.get_queryset().semestre(semestre)
+
 
 FA = "FA"
 MO = "MO"
@@ -51,6 +56,7 @@ CHOICE = (
 class Matiere(models.Model):
     nom = models.CharField(
         max_length=80,
+        unique=True
     )
     type = models.CharField(
         max_length=80,
@@ -79,6 +85,12 @@ class Matiere(models.Model):
     )
     objects = MatiereManager()
 
+    semestre = models.ForeignKey(
+        "Semestre.Semestre",
+        on_delete=models.CASCADE,
+        default=1
+    )
+
     #Méthodes
     def __str__(self):
         return f"{self.nom}"
@@ -90,16 +102,25 @@ class Matiere(models.Model):
         return super(Matiere, self).save(*args, **kwargs)
 
     def notes(self):
-        print(Note.objects.all())
-        return Note.objects.all()
+        return Note.objects.matiere(self)
 
-    @property
-    def moyenne(self):
+    #Retourne un dictionnaire contenant la moyenne actuelle et un traceback des notes
+    #de la matiere
+    def moyenne_traceback(self):
         if self.notes().count() > 0:
             total = 0
             div = 0
+            traceback = []
             for note in self.notes():
+                traceback.append({
+                    "x": note.date,
+                    "y": note.note,
+                    "z": note.coefficient
+                })
                 total += (note.note * note.coefficient)
                 div += note.coefficient
-            return round(total / div, 2)
+            return {
+                "moyenne" : round(total / div, 2),
+                "moyenne_traceback" : traceback
+            }
         return "Aucune note pour le moment"

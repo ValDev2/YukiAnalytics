@@ -3,6 +3,7 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/styles';
 import { connect } from 'react-redux';
+import { NavLink, withRouter } from 'react-router-dom';
 import {
   authCheckState,
   logout,
@@ -128,9 +129,6 @@ class AuthenticationForm extends Component {
     this.clearForm = this.clearForm.bind(this);
   }
 
-  componentDidMount(){
-    this.props.onTryAutoSignin()
-  }
 
   handleChange = e => {
     this.setState({
@@ -142,15 +140,18 @@ class AuthenticationForm extends Component {
   handleSubmit = e => {
     e.preventDefault();
     this.props.showLoginForm ? (
-      this.props.authLogin(this.state.usernameLogin,this.state.passwordLogin)
+      this.props.authLogin(this.state.usernameLogin,this.state.passwordLogin),
+      this.props.history.push("/")
     ) : (
       this.props.authRegister(
         this.state.usernameRegister,
         this.state.emailRegister,
         this.state.password1Register,
         this.state.password2Register
-      )
+      ),
+      this.props.history.push("/")
     )
+
     this.clearForm();
   }
 
@@ -361,4 +362,4 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(AuthenticationForm));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)((withRouter(AuthenticationForm))));

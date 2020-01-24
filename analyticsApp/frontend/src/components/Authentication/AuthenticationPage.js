@@ -24,7 +24,6 @@ const styles = {
 };
 
 class LoginPage extends Component{
-
   constructor(props){
     super(props);
     this.state = {
@@ -32,7 +31,6 @@ class LoginPage extends Component{
     };
     this.handleToogleForm = this.handleToogleForm.bind(this);
   }
-
 
   handleToogleForm = () => {
     this.setState({

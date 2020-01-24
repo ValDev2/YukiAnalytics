@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'User',
     'Notes',
     'Matiere',
+    'Semestre'
 ]
 
 SITE_ID = 1
