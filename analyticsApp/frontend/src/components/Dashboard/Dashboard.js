@@ -3,8 +3,7 @@ import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/styles';
 import { NavLink } from 'react-router-dom';
 import Chart from '../Chart/Chart';
-
-
+import { getMatieres } from '../../actions/matiere';
 
 const styles = {
   dashboard: {
@@ -14,6 +13,11 @@ const styles = {
 
 
 class Dashboard extends Component {
+
+  componentDidMount(){
+    this.props.getMatieres()
+  }
+
   render(){
     const { classes } = this.props
     return(
@@ -28,5 +32,11 @@ class Dashboard extends Component {
   }
 }
 
+const mapStateToProps = state => ({
+  isAuthenticated: state.authentication.isAuthenticated,
+  error: state.authentication.error,
+  user: state.authentication.user
+})
 
-export default connect()(withStyles(styles)(Dashboard));
+
+export default connect(null, { getMatieres })(withStyles(styles)(Dashboard));

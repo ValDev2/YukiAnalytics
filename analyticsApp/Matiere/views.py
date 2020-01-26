@@ -1,24 +1,22 @@
 from django.shortcuts import render
-from .models import Matiere
-from .serializers import MatiereSerializer
-from User.serializers import UserSerializer
 from rest_framework import generics
-from rest_framework.views import APIView
-from rest_framework.permissions import IsAdminUser, IsAuthenticated, AllowAny
+from .serializers import (
+    MatiereListSerializer,
+    MatiereDetailSerializer
+)
+from .models import Matiere
 from .permissions import IsOwner
-from rest_framework.response import Response
 
-# Create your views here.
-
-
+#Listing Matieres
 class MatiereListView(generics.ListCreateAPIView):
-    queryset = Matiere.objects.all()
-    serializer_class = MatiereSerializer
-    permission_classes = [AllowAny, ]
+    serializer_class = MatiereListSerializer
+    permissions_class = [IsOwner]
 
+    def get_queryset(self):
+        return Matiere.objects.filter(user=self.request.user)
 
 class MatiereDetailView(generics.RetrieveAPIView):
     queryset = Matiere.objects.all()
-    serializer_class = MatiereSerializer
-    permission_classes = [AllowAny, ]
+    serializer_class = MatiereDetailSerializer
+    permissions_class = [IsOwner]
     lookup_field = "slug"

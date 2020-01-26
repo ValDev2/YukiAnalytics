@@ -1,41 +1,36 @@
 from rest_framework import serializers
 from .models import Matiere
-from django.template.defaultfilters import slugify
-from Notes.serializers import NoteSerializer
-from User.serializers import UserSerializer
-from Notes.models import Note
+from Notes.serializers import NoteDetailSerializer
 
-class MatiereSerializer(serializers.ModelSerializer):
 
-    slug = serializers.ReadOnlyField()
-    notes = serializers.SerializerMethodField()
-    username = serializers.SerializerMethodField()
-    user_id = serializers.SerializerMethodField()
-    note_moyenne = serializers.SerializerMethodField()
-    moyenne_traceback = serializers.SerializerMethodField()
-
+class MatiereListSerializer(serializers.HyperlinkedModelSerializer):
+    url = serializers.HyperlinkedIdentityField(
+        view_name="matiere-api:matiere-detail",
+        lookup_field="slug"
+    )
     class Meta:
         model = Matiere
-        fields = "__all__"
+        fields = [
+            "id",
+            "url"
+        ]
 
-    def create(self, validated_data):
-        data = {**validated_data}
-        data["slug"] = slugify(validated_data["nom"])
-        data["user"] = self.context["request"].user
-        print(data)
-        return Matiere.objects.create(**data)
-
-    def get_notes(self, obj):
-        return NoteSerializer(Note.objects.filter(matiere=obj.id), many=True).data
-
-    def get_username(self, obj):
-        return obj.user.username
-
-    def get_user_id(self, obj):
-        return obj.user.id
-
-    def get_note_moyenne(self, obj):
-        return obj.moyenne_traceback()["moyenne"]
-
-    def get_moyenne_traceback(self, obj):
-        return obj.moyenne_traceback()["moyenne_traceback"]
+class MatiereDetailSerializer(serializers.ModelSerializer):
+    user = serializers.SerializerMethodField()
+    url = serializers.HyperlinkedIdentityField(
+        view_name="note-api:note-list",
+        lookup_field="slug"
+    )
+    class Meta:
+        model = Matiere
+        fields = [
+            "nom",
+            "slug",
+            "user",
+            "type",
+            "coefficient",
+            "difficulte",
+            "url"
+        ]
+    def get_user(self, obj):
+        return str(obj.user.username)

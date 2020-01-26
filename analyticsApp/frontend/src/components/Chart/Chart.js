@@ -5,11 +5,10 @@ import { Line } from 'react-chartjs-2';
 
 const styles = {
   Chart: {
-    width: "300px",
-    height: "300px"
+    width: "500px",
+    height: "500px"
   }
 };
-
 
 class Chart extends Component {
   render(){
@@ -45,7 +44,6 @@ class Chart extends Component {
               ]
             }
           ]
-
         }}
         options={
           {

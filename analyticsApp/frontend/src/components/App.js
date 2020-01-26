@@ -10,7 +10,6 @@ import Dashboard from './Dashboard/Dashboard';
 
 
 class App extends Component {
-
   componentDidMount(){
     store.dispatch(authCheckState());
     store.dispatch(loadUser());

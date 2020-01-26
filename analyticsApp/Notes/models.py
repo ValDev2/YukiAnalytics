@@ -47,7 +47,7 @@ class Note(models.Model):
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE
     )
-    date = models.DateTimeField(auto_now_add=True)
+    creation_date = models.DateTimeField(auto_now_add=True)
 
     #Generic Relation
     matiere = models.ForeignKey(

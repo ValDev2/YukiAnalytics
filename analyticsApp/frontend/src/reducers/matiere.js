@@ -1,43 +1,35 @@
 import {
-  GET_ALL_MATIERE,
-  ADD_MATIERE_STARTED,
-  ADD_MATIERE_SUCCESS,
-  ADD_MATIERE_FAILURE
+  GET_MATIERES_SUCCESS,
+  GET_MATIERES_STARTED,
+  GET_MATIERES_FAILURE
  } from '../actions/types.js';
 
 
-const initialstate = {
+const initialState = {
   matieres: [],
   loading: false,
   error: null
 }
 
-export default function(state=initialstate, action){
+export default function(state=initialState, action){
   switch (action.type) {
-    case GET_ALL_MATIERE:
+    case GET_MATIERES_STARTED:
       return {
         ...state,
-        matieres: action.payload
+        loading: true
       }
-    case ADD_MATIERE_STARTED:
+    case GET_MATIERES_SUCCESS:
       return {
-        ...state,
-        loading: true,
-        error: null
-      }
-    case ADD_MATIERE_FAILURE:
-      return {
-        ...state,
+        matieres: action.payload,
         loading: false,
-        error: action.payload
+        ...state
       }
-    case ADD_MATIERE_SUCCESS:
+    case GET_MATIERES_FAILURE:
       return {
-        matieres:  [...state, action.payload],
-        loading: false,
-        error: null
+        ...state,
+        error: action.payload.error
       }
     default:
-      return state;
+      return state
   }
 }

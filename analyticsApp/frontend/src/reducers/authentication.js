@@ -23,6 +23,7 @@ const initialState = {
 }
 
 export default function(state=initialState, action){
+  console.log(action);
   switch (action.type) {
     case LOGIN_STARTED:
       return {
@@ -85,7 +86,7 @@ export default function(state=initialState, action){
         ...state,
         error: null,
         isAuthenticated: true,
-        token: action.payload, 
+        token: action.payload,
       }
     default:
       return state
