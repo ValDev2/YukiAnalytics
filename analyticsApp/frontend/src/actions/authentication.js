@@ -10,6 +10,7 @@ import {
   REGISTER_SUCCESS,
   REGISTER_FAILURE
 } from './types'
+import { getMatieres } from './matiere';
 import axios from 'axios';
 
 
@@ -24,13 +25,15 @@ const authLoginFailure = error => ({
   }
 });
 
-const authLoginSuccess = (token, user_id) => ({
-  type: LOGIN_SUCCESS,
-  payload: {
-    token: token,
-    user_id: user_id
+const authLoginSuccess = (token, user_id) => {
+  return {
+    type: LOGIN_SUCCESS,
+    payload: {
+      token: token,
+      user_id: user_id
+    }
   }
-});
+};
 
 const userLoaded = user => ({
   type: USER_LOADED,
@@ -88,9 +91,9 @@ export const authRegister = (username, email, password1, password2) => dispatch 
 
 
 export const logout = () => {
-  window.localStorage.setItem("token", null);
-  window.localStorage.setItem("expirationDate", null);
-  window.localStorage.setItem("user_id", null);
+  window.localStorage.setItem("token", JSON.stringify(null));
+  window.localStorage.setItem("expirationDate",JSON.stringify(null));
+  window.localStorage.setItem("user_id", JSON.stringify(null));
   return {
     type: AUTH_LOGOUT
   }
@@ -112,6 +115,7 @@ export const authLogin = (username, password) => dispatch => {
     window.localStorage.setItem("expirationDate", expirationDate);
     window.localStorage.setItem("user_id", user_id);
     dispatch(authLoginSuccess(token, user_id));
+    dispatch(getMatieres());
     dispatch(loadUser());
     dispatch(checkAuthTimeouT(3600));
   })
@@ -160,13 +164,17 @@ export const authCheckState = () => (dispatch, getState) => {
   const token = window.localStorage.getItem("token");
   if(token === null){
     dispatch(logout());
+    console.log("NO TOKEN ")
   } else {
-    const expirationDate = window.localStorage.getItem("expirationDate");
-    if(new Date(expirationDate) <= new Date()){
+    const expirationDate = parseInt(window.localStorage.getItem("expirationDate"));
+    if(new Date(expirationDate) < new Date()){
       dispatch(logout());
+      console.log("TEMPS DEPASSE")
     } else {
+      console.log("tout va bien")
       const user_id = window.localStorage.getItem("user_id");
       dispatch(authLoginSuccess(token, user_id));
+      dispatch(getMatieres());
       checkAuthTimeouT((new Date(expirationDate).getTime() - new Date().getTime()) / 1000);
     }
   }

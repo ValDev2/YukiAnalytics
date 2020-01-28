@@ -1,8 +1,10 @@
 from django.db import models
 from django.conf import settings
 from Notes.models import Note
+from datetime import datetime
 from django.core.exceptions import ValidationError
 from django.template.defaultfilters import slugify
+from datetime import datetime
 
 #Queryset methods
 class MatiereQuerySet(models.QuerySet):
@@ -51,6 +53,23 @@ CHOICE = (
     (DI, "difficile"),
 )
 
+LI = "LI"
+MA = "MA"
+PH = "PH"
+BI = "BI"
+HI = "HI"
+LA = "LA"
+
+CHOICE_TYPE =(
+    (LI, "Littérature"),
+    (MA, "Mathématiques"),
+    (PH, "Physique"),
+    (BI, "Biologie"),
+    (HI, "Histoire"),
+    (LA, "Langue")
+)
+
+
 
 # Create your models here.
 class Matiere(models.Model):
@@ -59,8 +78,9 @@ class Matiere(models.Model):
         unique=True
     )
     type = models.CharField(
-        max_length=80,
-        default="default_type"
+        choices=CHOICE_TYPE,
+        default=MA,
+        max_length=30
     )
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -96,31 +116,19 @@ class Matiere(models.Model):
         return f"{self.nom}"
 
     def save(self, *args, **kwargs):
-        if Matiere.objects.filter(nom=self.nom).exists():
+        if Matiere.objects.filter(nom=self.nom, id=not(self.id)).exists():
             raise ValidationError("Cette matière existe déjà ! ")
         self.slug = slugify(self.nom)
         return super(Matiere, self).save(*args, **kwargs)
 
     def notes(self):
-        return Note.objects.matiere(self)
+        return Note.objects.matiere(self).order_by("creation_date")
+
+    def get_type(self):
+        return str(self.get_type_display())
+
+    def get_difficulte(self):
+        return str(self.get_difficulte_display())
 
     #Retourne un dictionnaire contenant la moyenne actuelle et un traceback des notes
     #de la matiere
-    def moyenne_traceback(self):
-        if self.notes().count() > 0:
-            total = 0
-            div = 0
-            traceback = []
-            for note in self.notes():
-                traceback.append({
-                    "x": note.date,
-                    "y": note.note,
-                    "z": note.coefficient
-                })
-                total += (note.note * note.coefficient)
-                div += note.coefficient
-            return {
-                "moyenne" : round(total / div, 2),
-                "moyenne_traceback" : traceback
-            }
-        return "Aucune note pour le moment"

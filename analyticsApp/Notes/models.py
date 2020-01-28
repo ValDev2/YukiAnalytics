@@ -5,7 +5,7 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 #Ecrire les méthodes de queryset ici :
 class NoteQuerySet(models.QuerySet):
     def matiere(self, matiere):
-        return self.filter(matiere=matiere)
+        return self.filter(matiere=matiere).order_by("creation_date")
 
     def below_average(self):
         return self.filter(note__lt=10)

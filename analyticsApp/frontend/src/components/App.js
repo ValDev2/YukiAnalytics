@@ -7,7 +7,7 @@ import store from '../store.js';
 import { loadUser, authCheckState } from '../actions/authentication';
 import LoginPage from './Authentication/AuthenticationPage';
 import Dashboard from './Dashboard/Dashboard';
-
+import './App.css';
 
 class App extends Component {
   componentDidMount(){

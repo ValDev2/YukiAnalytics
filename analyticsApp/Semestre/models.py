@@ -4,22 +4,6 @@ from django.utils.text import slugify
 from django.core.exceptions import ValidationError
 from Matiere.models import Matiere
 
-
-class SemestreQuerySet(models.QuerySet):
-    def user(self, user):
-        return self.objects.filter(user=user)
-
-    def notes(self):
-        return self.objects.filter()
-
-
-class SemestreManager(models.Manager):
-    def get_queryset(self):
-        return SemestreQuerySet(self.models, using=self._db)
-
-    def user(self, user):
-        return self.get_queryset().user(user)
-
 FA = "FA"
 MO = "MO"
 DI = "DI"

@@ -16,7 +16,8 @@ class MatiereListView(generics.ListCreateAPIView):
         return Matiere.objects.filter(user=self.request.user)
 
 class MatiereDetailView(generics.RetrieveAPIView):
-    queryset = Matiere.objects.all()
     serializer_class = MatiereDetailSerializer
     permissions_class = [IsOwner]
     lookup_field = "slug"
+    def get_queryset(self):
+        return Matiere.objects.filter(user=self.request.user)

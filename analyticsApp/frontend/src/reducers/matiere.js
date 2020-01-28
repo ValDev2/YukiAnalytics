@@ -20,13 +20,14 @@ export default function(state=initialState, action){
       }
     case GET_MATIERES_SUCCESS:
       return {
-        matieres: action.payload,
-        loading: false,
-        ...state
+        ...state,
+        matieres: [...state.matieres, action.payload],
+        loading: false
       }
     case GET_MATIERES_FAILURE:
       return {
         ...state,
+        loading: false,
         error: action.payload.error
       }
     default:

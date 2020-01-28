@@ -17,10 +17,9 @@ class MatiereListSerializer(serializers.HyperlinkedModelSerializer):
 
 class MatiereDetailSerializer(serializers.ModelSerializer):
     user = serializers.SerializerMethodField()
-    url = serializers.HyperlinkedIdentityField(
-        view_name="note-api:note-list",
-        lookup_field="slug"
-    )
+    notes = serializers.SerializerMethodField()
+    type = serializers.CharField(source="get_type")
+    difficulte = serializers.CharField(source="get_difficulte")
     class Meta:
         model = Matiere
         fields = [
@@ -30,7 +29,30 @@ class MatiereDetailSerializer(serializers.ModelSerializer):
             "type",
             "coefficient",
             "difficulte",
-            "url"
+            "notes"
         ]
     def get_user(self, obj):
         return str(obj.user.username)
+
+    def get_notes(self, obj):
+        notes = obj.notes()
+        return NoteDetailSerializer(notes,many=True).data
+
+class MatiereCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Matiere
+        fields = [
+            "nom",
+            "type",
+            "coefficient",
+            "difficulte"
+        ]
+
+    def create(self, validated_data):
+        validated_data["user"] = self.context["request"].user
+        return Matiere.obejcts.create(**validated_data)
+
+    def validated_data(self, data):
+        matieres = [matiere.nom for matiere in Matiere.objects.all()]
+        if data["nom"] in matieres:
+            raise serializers.ValidationError("Matière déjà existante ")
