@@ -4,12 +4,24 @@ import { withStyles } from '@material-ui/styles';
 import { getMatieres } from '../../actions/matiere';
 import Header from '../Header/Header';
 import SideBar from '../SideBar/SideBar';
+import DashBoardMatiereContent from '../DashBoardMatiereContent/DashBoardMatiereContent';
+import DashBoardMeContent from '../DashBoardMeContent/DashBoardMeContent';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link
+} from "react-router-dom";
+
+
 const styles = {
   dashboard: {
 
+  },
+  dashBoardContainer: {
+    display: "flex"
   }
 }
-
 
 class Dashboard extends Component {
 
@@ -19,6 +31,17 @@ class Dashboard extends Component {
       <div className={classes.dashboard}>
         <Header />
         <SideBar />
+        <Switch>
+          <Route exact path="/profile/me" render={() => <DashBoardMeContent />}/>
+          <Route exact path="/matière/:slug"
+                 render={ (routeProps) => <DashBoardMatiereContent
+                                            {...routeProps}
+                                            matiere={this.props.matieres.find(mat => {
+                                              return mat.slug === routeProps.match.params.slug
+                                          })}
+                                        /> }
+          />
+        </Switch>
       </div>
     )
   }

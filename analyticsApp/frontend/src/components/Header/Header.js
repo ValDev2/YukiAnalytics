@@ -8,7 +8,8 @@ const styles = {
     width: "100%",
     display: "flex",
     backgroundColor: "#3c48a4",
-    alignItems: "center"
+    alignItems: "center",
+    position: "fixed"
   },
   headerWrapper: {
     maxWidth: "90%",

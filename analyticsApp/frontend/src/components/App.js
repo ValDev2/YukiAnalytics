@@ -21,10 +21,10 @@ class App extends Component {
           <BrowserRouter>
             <div>
               <Switch>
-                <Route exact path="/login">
+                <Route path="/login">
                   <LoginPage />
                 </Route>
-                <ProtectedRoute exact path="/" component={Dashboard} />
+                <ProtectedRoute path="/" component={Dashboard} />
               </Switch>
             </div>
           </BrowserRouter>

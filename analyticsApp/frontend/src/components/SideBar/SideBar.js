@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/styles';
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
 import ListItemIcon from '@material-ui/core/ListItemIcon';
@@ -9,7 +9,6 @@ import List from '@material-ui/core/List'
 import Collapse from '@material-ui/core/Collapse';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
-
 
 const styles = {
   BrandLogo: {
@@ -75,8 +74,6 @@ class SideBar extends Component {
   }
 
   render(){
-
-    console.log(matiere_type["Mathématiques"])
     const { classes } = this.props;
     const { openMatieres } = this.state;
     return(
@@ -85,26 +82,30 @@ class SideBar extends Component {
           <Link to="/">LOGO</Link>
         </div>
         <List disablePadding dense className={classes.SideBarContent}>
-          <ListItem
-            button
-            dense
-            className={classes.ListItem}
-          >
-            <ListItemText className={classes.ListItemText}>
-              <i className="fas fa-home" style={{marginRight: "30px"}}></i>
-              Home
-            </ListItemText>
-          </ListItem>
-          <ListItem
-            button
-            dense
-            className={classes.ListItem}
-          >
-            <ListItemText className={classes.ListItemText}>
-              <i className="fas fa-user" style={{marginRight: "30px"}}></i>
-              Me
-            </ListItemText>
-          </ListItem>
+          <NavLink to="/">
+            <ListItem
+              button
+              dense
+              className={classes.ListItem}
+            >
+              <ListItemText className={classes.ListItemText}>
+                <i className="fas fa-home" style={{marginRight: "30px"}}></i>
+                Home
+              </ListItemText>
+            </ListItem>
+          </NavLink>
+          <NavLink to="/profile/me">
+            <ListItem
+              button
+              dense
+              className={classes.ListItem}
+            >
+              <ListItemText className={classes.ListItemText}>
+                <i className="fas fa-user" style={{marginRight: "30px"}}></i>
+                Me
+              </ListItemText>
+            </ListItem>
+          </NavLink>
           <ListItem
             button
             dense
@@ -122,18 +123,20 @@ class SideBar extends Component {
               {
                 this.props.matieres.map(mat => {
                   return (
-                    <ListItem button>
-                      <ListItemText
-                        className={classes.subListItemText}
-                        key={`${mat.id}`}
-                      >
-                        <i
-                          className={`fas fa-${matiere_type[mat.type]}`}
-                          style={{marginRight: "30px"}}
-                        ></i>
-                        {mat.nom}
-                      </ListItemText>
-                    </ListItem>
+                    <NavLink to={`/matière/${mat.slug}`}>
+                      <ListItem button>
+                        <ListItemText
+                          className={classes.subListItemText}
+                          key={`${mat.id}`}
+                        >
+                          <i
+                            className={`fas fa-${matiere_type[mat.type]}`}
+                            style={{marginRight: "30px"}}
+                          ></i>
+                          {mat.nom}
+                        </ListItemText>
+                      </ListItem>
+                    </NavLink>
                   )
                 })
               }
