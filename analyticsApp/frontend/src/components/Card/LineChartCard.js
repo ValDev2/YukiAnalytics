@@ -6,24 +6,34 @@ import NoteLineChart from '../Chart/NoteLineChart';
 const styles = {
   Card: {
     display: "flex",
+    flexDirection: "column",
     textAlign: "center",
     justifyContent: "center",
     alignItems: "center",
     padding: "20px"
+  },
+  CardTitle: {
+    marginBottom: "20px"
   }
 }
 
-class Card extends Component {
+class LineChartCard extends Component {
 
   render(){
-    const { classes } = this.props;
+    const { classes, title, data } = this.props;
     return(
       <Paper className={classes.Card}>
-        <NoteLineChart />
+        <span className={classes.CardTitle}>
+          {title}
+        </span>
+        <NoteLineChart
+          dataset={data}
+          title={title}
+        />
       </Paper>
     )
   }
 }
 
 
-export default withStyles(styles)(Card);
+export default withStyles(styles)(LineChartCard);
