@@ -4,7 +4,7 @@ import {
   ADD_NOTE_STARTED
 } from './types.js';
 import axios from 'axios';
-import { getMatieres } from './matiere';
+import { getMatiereObject } from './matiere';
 
 
 const addNoteStarted = () => ({
@@ -34,17 +34,19 @@ export const addNote = (note, coefficient, matiere_id) => dispatch => {
   const token = window.localStorage.getItem("token");
   if(token){
     const note_obj = {
-      note: 15,
+      note: 14,
       coefficient: 1,
-      matiere : 2//matiere_id
+      matiere : 1//matiere_id
     };
     config.headers["Authorization"] = `Token ${token}`
     axios.post("/api/notes/create/", note_obj, config)
       .then( res => {
-        console.log(res.data);
+        dispatch(addNoteSuccess(res.data));
+        dispatch(getMatiereObject("linear-algebra"));
       })
       .catch( err => {
-        console.log(err.response.data);
+        console.log(err);
+        dispatch(addNoteFailure(err))
       })
   }
 }

@@ -62,7 +62,7 @@ const getMatiereObjectFailure = error => ({
   }
 })
 
-const getMatiereObject = slug => dispatch => {
+export const getMatiereObject = slug => dispatch => {
   const config = {
     headers: {
       'Content-Type': 'application/json',
@@ -76,7 +76,8 @@ const getMatiereObject = slug => dispatch => {
       dispatch(getMatiereObjectSuccess(res.data))
     })
     .catch( err => {
-      dispatch(getMatiereObjectFailure(err.reponse.data));
+      console.log(err.response)
+      dispatch(getMatiereObjectFailure(err.reponse));
     })
 }
 
@@ -102,7 +103,7 @@ export const getMatieres = () => dispatch => {
           })
           .catch(err => {
             console.log(err);
-            dispatch(getMAtiereDetailFailure(err.response));
+            dispatch(getMAtiereDetailFailure(err));
           })
       }
     })
