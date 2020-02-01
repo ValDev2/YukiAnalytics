@@ -110,7 +110,7 @@ export const authLogin = (username, password) => dispatch => {
     console.log(res);
     const token = res.data.key;
     const user_id = res.data.user_id;
-    const expirationDate = new Date().getTime() + 3600 * 1000
+    const expirationDate = new Date().getTime() + 3600 * 1000;
     window.localStorage.setItem("token", token);
     window.localStorage.setItem("expirationDate", expirationDate);
     window.localStorage.setItem("user_id", user_id);

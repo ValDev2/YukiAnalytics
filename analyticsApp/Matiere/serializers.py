@@ -24,6 +24,7 @@ class MatiereDetailSerializer(serializers.ModelSerializer):
         model = Matiere
         fields = [
             "nom",
+            "id",
             "slug",
             "user",
             "type",

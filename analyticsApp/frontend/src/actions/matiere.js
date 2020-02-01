@@ -1,16 +1,18 @@
 import {
   GET_MATIERES_SUCCESS,
   GET_MATIERES_STARTED,
-  GET_MATIERES_FAILURE
+  GET_MATIERES_FAILURE,
+  ADD_MATIERE_STARTED,
+  GET_MATIERE_DETAIL_SUCCESS,
+  GET_MATIERE_DETAIL_STARTED,
+  GET_MATIERE_DETAIL_FAILURE,
+  GET_MATIERE_OBJECT_STARTED,
+  GET_MATIERE_OBJECT_SUCCESS,
+  GET_MATIERE_OBJECT_FAILURE
 } from './types.js';
 import axios from 'axios';
 import { slugify } from '../utils/slug.js';
 
-const config = {
-  headers: {
-    'Content-Type': 'application/json',
-  }
-}
 
 const getMatieresStarted = () => ({
   type: GET_MATIERES_STARTED
@@ -28,29 +30,84 @@ const getMatieresFailure = error => ({
   }
 });
 
+const getMatiereDetail = matiere_obj => ({
+  type: GET_MATIERE_DETAIL_SUCCESS,
+  payload: matiere_obj
+})
 
-export const getMatieres = () => (dispatch, getState) => {
+const getMatiereDetailStarted = () => ({
+  type: GET_MATIERE_DETAIL_STARTED,
+})
+
+const getMAtiereDetailFailure = err => ({
+  type: GET_MATIERE_DETAIL_FAILURE,
+  payload: {
+    error: error
+  }
+})
+
+const getMatiereObjectStated = () => ({
+  type: GET_MATIERE_OBJECT_STARTED,
+})
+
+const getMatiereObjectSuccess = matiere_obj => ({
+  type: GET_MATIERE_OBJECT_SUCCESS,
+  payload: matiere_obj
+})
+
+const getMatiereObjectFailure = error => ({
+  type: GET_MATIERE_OBJECT_FAILURE,
+  payload: {
+    error: error
+  }
+})
+
+const getMatiereObject = slug => dispatch => {
+  const config = {
+    headers: {
+      'Content-Type': 'application/json',
+    }
+  };
+  const token = window.localStorage.getItem("token");
+  config.headers["Authorization"] = `Token ${token}`
+  dispatch(getMatiereObjectStated());
+  axios.get(`/api/matieres/${slug}/`, config)
+    .then( res => {
+      dispatch(getMatiereObjectSuccess(res.data))
+    })
+    .catch( err => {
+      dispatch(getMatiereObjectFailure(err.reponse.data));
+    })
+}
+
+
+export const getMatieres = () => dispatch => {
+  const config = {
+    headers: {
+      'Content-Type': 'application/json',
+    }
+  };
   dispatch(getMatieresStarted());
   const token = window.localStorage.getItem("token");
   config.headers["Authorization"] = `Token ${token}`
   axios.get("/api/matieres/", config)
     .then(res => {
-      const matieres = res.data
-      //calling url-details
+      const matieres = res.data;
+      dispatch(getMatieresSuccess(res.data));
       for(let matiere of matieres){
+        dispatch(getMatiereDetailStarted());
         axios.get(matiere.url, config)
           .then(res => {
-            console.log("TOUT BAIGNE ! ")
-            dispatch(getMatieresSuccess(res.data));
+            dispatch(getMatiereDetail(res.data));
           })
           .catch(err => {
-            console.log(err)
-            dispatch(getMatieresFailure(err.response));
+            console.log(err);
+            dispatch(getMAtiereDetailFailure(err.response));
           })
       }
     })
     .catch(err => {
-      console.log(err.response.data);
-      dispatch(getMatieresFailure(err.response.data));
+      console.log(err);
+      dispatch(err.response.data)
     })
 }

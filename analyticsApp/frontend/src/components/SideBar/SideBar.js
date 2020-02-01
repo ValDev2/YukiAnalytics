@@ -148,11 +148,5 @@ class SideBar extends Component {
   }
 }
 
-const mapStateToProps = state => (
-  {
-    matieres: state.matieres.matieres,
-    user: state.authentication.user
-  }
-)
 
-export default connect(mapStateToProps)(withStyles(styles)(SideBar));
+export default (withStyles(styles)(SideBar));

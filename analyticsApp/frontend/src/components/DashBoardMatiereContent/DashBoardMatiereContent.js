@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/styles';
 import Grid from '@material-ui/core/Grid';
 import LineChartCard from '../Card/LineChartCard';
+import AddNoteCard from '../Card/AddNoteCard';
+
 
 const styles = {
   DashBoardMatiereContent: {
@@ -21,9 +23,7 @@ const styles = {
 class DashBoardMatiereContent extends Component {
 
   render(){
-    console.log(this.props)
-    const { classes } = this.props;
-    const { matiere } = this.props;
+    const { classes, matiere } = this.props;
     return(
       <div className={classes.DashBoardMatiereContent}>
         <div className={classes.wrapper}>
@@ -36,11 +36,14 @@ class DashBoardMatiereContent extends Component {
                   <LineChartCard
                     title={matiere.nom}
                     data={matiere.notes}
-                   />
+                  />
                 </Grid>
                 <Grid item
                     sm={6}
                 >
+                  <AddNoteCard
+                    updateMatieres={this.props.updateMatieres}
+                  />
                 </Grid>
             </Grid>
         </div>
