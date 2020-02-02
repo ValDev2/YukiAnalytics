@@ -34,9 +34,9 @@ export const addNote = (note, coefficient, matiere_id) => dispatch => {
   const token = window.localStorage.getItem("token");
   if(token){
     const note_obj = {
-      note: 14,
-      coefficient: 1,
-      matiere : 1//matiere_id
+      note: note,
+      coefficient: coefficient,
+      matiere : matiere_id
     };
     config.headers["Authorization"] = `Token ${token}`
     axios.post("/api/notes/create/", note_obj, config)

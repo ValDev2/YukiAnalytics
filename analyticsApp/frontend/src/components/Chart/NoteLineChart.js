@@ -53,7 +53,7 @@ class NoteLineChart extends Component {
                 xAxes: [{
                   type: "time",
                   time: {
-                    unit: "week"
+                    unit: "day"
                   }
                 }]
               }

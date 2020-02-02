@@ -21,7 +21,6 @@ const styles = {
 }
 
 class DashBoardMatiereContent extends Component {
-
   render(){
     const { classes, matiere } = this.props;
     return(
@@ -42,7 +41,8 @@ class DashBoardMatiereContent extends Component {
                     sm={6}
                 >
                   <AddNoteCard
-                    updateMatieres={this.props.updateMatieres}
+                    title={matiere.nom}
+                    matiereId={matiere.id}
                   />
                 </Grid>
             </Grid>

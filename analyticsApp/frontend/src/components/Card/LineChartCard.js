@@ -5,6 +5,7 @@ import NoteLineChart from '../Chart/NoteLineChart';
 
 const styles = {
   Card: {
+    fontFamily: "Noto Sans, sans-serif",
     display: "flex",
     flexDirection: "column",
     textAlign: "center",
@@ -13,7 +14,9 @@ const styles = {
     padding: "20px"
   },
   CardTitle: {
-    marginBottom: "20px"
+    marginBottom: "20px",
+    fontWeight: "700",
+    alignSelf: "self-start"
   }
 }
 
@@ -24,7 +27,7 @@ class LineChartCard extends Component {
     return(
       <Paper className={classes.Card}>
         <span className={classes.CardTitle}>
-          {title}
+          Graph en {title}
         </span>
         <NoteLineChart
           dataset={data}
