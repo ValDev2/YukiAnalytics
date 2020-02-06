@@ -20,7 +20,7 @@ const styles = {
     textAlign: "center",
     justifyContent: "center",
     alignItems: "center",
-    padding: "20px"
+    padding: "40px 30px"
   },
   Form: {
     display: "flex",

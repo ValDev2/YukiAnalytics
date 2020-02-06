@@ -130,5 +130,97 @@ class Matiere(models.Model):
     def get_difficulte(self):
         return str(self.get_difficulte_display())
 
-    #Retourne un dictionnaire contenant la moyenne actuelle et un traceback des notes
-    #de la matiere
+    def get_previous_moyenne(self):
+        notes = self.notes()[0:self.notes().count() - 1]
+        if notes.count() > 0:
+            if notes == 1:
+                return notes[0].note
+            else:
+                num = sum([note.note * note.coefficient for note in notes])
+                den = sum([note.coefficient for note in notes])
+                return round(num / den, 2)
+        return None
+
+    def get_moyenne(self):
+        result = {
+            "moyenne" : None,
+            "perf" : None
+        }
+        notes = self.notes()
+        if notes.count() > 1:
+            last_note = notes.reverse()[0]
+            result["moyenne"] = round((self.get_previous_moyenne() + last_note.note * last_note.coefficient)/ (last_note.coefficient + 1),2)
+            result["perf"] = round(result["moyenne"] - self.get_previous_moyenne(), 2)
+            return result
+        elif notes.count() == 1:
+            result["moyenne"] = notes[0].note
+            result["perf"] = notes[0].note
+            return result
+        return result
+
+    def get_previous_total_work_hour(self):
+        notes = self.notes()[0: self.notes().count() - 1]
+        if notes.count() > 0:
+            if notes.count() == 1:
+                return notes[0].total_time
+            else:
+                num = sum([note.total_time for note in notes])
+                den = notes.count()
+                return round(num / den, 2)
+        return None
+
+    def get_total_work_hour(self):
+        result = {
+            "total_work_hour": None,
+            "perf": None
+        }
+        notes = self.notes()
+        if notes.count() > 1:
+            last_note = notes.reverse()[0]
+            result["total_work_hour"] = round((self.get_previous_total_work_hour() + last_note.total_time) / 2, 2)
+            result["perf"] = round(result["total_work_hour"] - self.get_previous_total_work_hour(), 2)
+            return result
+        elif notes.count() == 1:
+            result["total_work_hour"] = notes[0].total_time
+            result["perf"] = notes[0].total_time
+            return result
+        return result
+
+    def get_previous_satisfaction(self):
+        satisfaction = {
+            "PS": 0,
+            "SA": 1,
+            "TS": 2
+        }
+        notes = self.notes()[0:self.notes().count() - 1]
+        if notes.count() > 0:
+            if notes.count() == 1:
+                return satisfaction[notes[0].satisfaction]
+            else:
+                num = sum([satisfaction[note.satisfaction] for note in notes])
+                den = notes.count()
+                return round(num / den, 2)
+        return None
+
+    def get_satisfaction(self):
+        #barème
+        satisfaction = {
+            "PS": 0,
+            "SA": 1,
+            "TS": 2
+        }
+        result = {
+            "satisfaction": None,
+            "perf": None
+        }
+        notes = self.notes()
+        if notes.count() > 1:
+            last_note = notes.reverse()[0]
+            result["satisfaction"] = round((self.get_previous_satisfaction() + satisfaction[last_note.satisfaction])/2, 2)
+            result["perf"] = round(result["satisfaction"] - self.get_previous_satisfaction(), 2)
+            return result
+        elif notes.count() == 1:
+            result["satisfaction"] = satisfaction[notes[0].satisfaction]
+            result["perf"] = satisfaction[notes[0].satisfaction]
+            return result
+        return result

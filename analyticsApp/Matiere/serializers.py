@@ -3,6 +3,19 @@ from .models import Matiere
 from Notes.serializers import NoteDetailSerializer
 
 
+class MoyenneSerializer(serializers.Serializer):
+    moyenne = serializers.FloatField()
+    perf = serializers.FloatField()
+
+
+class WorkHourSerializer(serializers.Serializer):
+    total_work_hour = serializers.FloatField()
+    perf = serializers.FloatField()
+
+class satisfactionSerializer(serializers.Serializer):
+    satisfaction = serializers.FloatField()
+    perf = serializers.FloatField()
+
 class MatiereListSerializer(serializers.HyperlinkedModelSerializer):
     url = serializers.HyperlinkedIdentityField(
         view_name="matiere-api:matiere-detail",
@@ -20,6 +33,9 @@ class MatiereDetailSerializer(serializers.ModelSerializer):
     notes = serializers.SerializerMethodField()
     type = serializers.CharField(source="get_type")
     difficulte = serializers.CharField(source="get_difficulte")
+    moyenne = MoyenneSerializer(source="get_moyenne")
+    total_work_hour = WorkHourSerializer(source="get_total_work_hour")
+    satisfaction = satisfactionSerializer(source="get_satisfaction")
     class Meta:
         model = Matiere
         fields = [
@@ -30,6 +46,9 @@ class MatiereDetailSerializer(serializers.ModelSerializer):
             "type",
             "coefficient",
             "difficulte",
+            "moyenne",
+            "total_work_hour",
+            "satisfaction", 
             "notes"
         ]
     def get_user(self, obj):

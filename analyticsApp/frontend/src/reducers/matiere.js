@@ -60,7 +60,6 @@ export default function(state=initialState, action){
         error: null
       }
     case GET_MATIERE_OBJECT_SUCCESS:
-      console.log(action.payload)
       return {
         matieres: state.matieres.map( matiere_obj => matiere_obj.id === action.payload.id ? action.payload : matiere_obj),
         loading: false,

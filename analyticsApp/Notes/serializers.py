@@ -18,6 +18,9 @@ class NoteDetailSerializer(serializers.ModelSerializer):
             "value",
             "user",
             "creation_date",
+            "total_time",
+            "difficulte",
+            "satisfaction",
             "timestamp",
             "matiere",
             "id",
@@ -39,6 +42,9 @@ class NoteCreateSerializer(serializers.ModelSerializer):
         model = Note
         fields = [
             "creation_date",
+            "total_time",
+            "difficulte",
+            "satisfaction",
             "coefficient",
             "note",
             "matiere",

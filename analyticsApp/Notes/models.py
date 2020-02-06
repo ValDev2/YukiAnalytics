@@ -2,6 +2,25 @@ from django.db import models
 from django.conf import settings
 from django.core.validators import MaxValueValidator, MinValueValidator
 
+
+
+PS = "PS"
+SA = "SA"
+TS = "TS"
+CHOICE = (
+    (PS, "Pas Satisfait"),
+    (SA, "Satisfait"),
+    (TS, "Très Satisfait")
+)
+FA = "FA"
+MO = "MO"
+DI = "DI"
+DIFFICULTE_CHOICE = (
+    (FA, "facile"),
+    (MO, "moyenne"),
+    (DI, "difficile"),
+)
+
 #Ecrire les méthodes de queryset ici :
 class NoteQuerySet(models.QuerySet):
     def matiere(self, matiere):
@@ -15,6 +34,10 @@ class NoteQuerySet(models.QuerySet):
 
     def user(self, user):
         return self.filter(user=user)
+
+    #Renvoie un queryset des notes, trié par difficulte
+    def difficulte(self):
+        return self.order_by("difficulte")
 
 #Appeer les méthodes de querySet ici :
 class NoteManager(models.Manager):
@@ -34,6 +57,8 @@ class NoteManager(models.Manager):
     def user(self, user):
         return self.get_queryset().user()
 
+    def difficulte(self):
+        return self.get_queryset().difficulte
 
 class Note(models.Model):
     note = models.FloatField(
@@ -49,7 +74,22 @@ class Note(models.Model):
     )
     creation_date = models.DateTimeField(auto_now_add=True)
 
-    #Generic Relation
+    satisfaction = models.CharField(
+        choices=CHOICE,
+        max_length=30,
+        default="SA"
+    )
+
+    difficulte = models.CharField(
+        choices=DIFFICULTE_CHOICE,
+        max_length=30,
+        default=MO
+    )
+
+    total_time = models.FloatField(
+        default="1"
+    )
+
     matiere = models.ForeignKey(
         'Matiere.Matiere',
         on_delete = models.CASCADE,
@@ -58,7 +98,7 @@ class Note(models.Model):
     objects = NoteManager()
 
     def __str__(self):
-        return f"{self.note} coefficient {self.coefficient}"
+        return f"{self.note} coefficient {self.coefficient} : temps total de travail : {self.total_time}"
 
     @property
     def get_nom_matiere(self):

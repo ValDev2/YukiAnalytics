@@ -5,18 +5,19 @@ import NoteLineChart from '../Chart/NoteLineChart';
 
 const styles = {
   Card: {
-    fontFamily: "Noto Sans, sans-serif",
+    fontFamily: "Roboto, sans-serif",
     display: "flex",
     flexDirection: "column",
     textAlign: "center",
     justifyContent: "center",
     alignItems: "center",
-    padding: "20px"
+    padding: "40px 30px",
+    height: "100%"
   },
   CardTitle: {
-    marginBottom: "20px",
-    fontWeight: "700",
-    alignSelf: "self-start"
+    marginBottom: "17px",
+    alignSelf: "self-start",
+    fontWeight: "500"
   }
 }
 
