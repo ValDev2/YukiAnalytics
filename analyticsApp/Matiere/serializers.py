@@ -48,7 +48,7 @@ class MatiereDetailSerializer(serializers.ModelSerializer):
             "difficulte",
             "moyenne",
             "total_work_hour",
-            "satisfaction", 
+            "satisfaction",
             "notes"
         ]
     def get_user(self, obj):
@@ -72,7 +72,8 @@ class MatiereCreateSerializer(serializers.ModelSerializer):
         validated_data["user"] = self.context["request"].user
         return Matiere.obejcts.create(**validated_data)
 
-    def validated_data(self, data):
+    def validate(self, data):
         matieres = [matiere.nom for matiere in Matiere.objects.all()]
         if data["nom"] in matieres:
             raise serializers.ValidationError("Matière déjà existante ")
+        return data
