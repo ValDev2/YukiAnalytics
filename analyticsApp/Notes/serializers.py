@@ -30,7 +30,6 @@ class NoteDetailSerializer(serializers.ModelSerializer):
         return time.mktime(obj.creation_date.timetuple()) * 1000
 
     def get_user(self, obj):
-        print(obj.user)
         return str(obj.user.username)
 
     def get_value(self, obj):

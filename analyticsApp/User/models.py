@@ -86,18 +86,29 @@ class User(AbstractUser):
             from_people__to_user=self
         )
 
+    def get_followers_count(self):
+        return self.get_followers().count()
+
     def get_following(self):
         return self.relationships.filter(
             to_people__status=RELATIONSHIP_FOLLOWING,
             to_people__from_user=self
         )
 
+    def get_following_count(self):
+        return self.get_following().count()
+
     def get_blocked_users(self):
         return self.relationships.filter(
             to_people__status=RELATIONSHIP_BLOCKING,
-            to_people__from_people=self
+            to_people__from_user=self
         )
 
+    def get_blocking_users(self):
+        return self.related_to.filter(
+            from_people__to_user=self,
+            from_people__status=RELATIONSHIP_BLOCKING
+        )
 
 
 RELATIONSHIP_FOLLOWING = 1
