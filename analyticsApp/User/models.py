@@ -46,6 +46,10 @@ class User(AbstractUser):
         default="NA",
     )
 
+    creation_date = models.DateTimeField(
+        auto_now=True
+    )
+
     def __str__(self):
         return self.username
 
@@ -56,7 +60,6 @@ class User(AbstractUser):
         return Matiere.objects.filter(user=self.id)
 
     #Relationship's method
-
     def get_friends(self):
         return self.relationships.filter(
             to_people__from_user = self,
@@ -72,6 +75,18 @@ class User(AbstractUser):
             status=status
         )
         return relationship
+
+    def get_follow_relationships(self):
+        return Relationship.objects.filter(
+            from_user=self,
+            status=1
+        )
+
+    def get_block_relationships(self):
+        return Relationship.objects.filter(
+            from_user=self,
+            status=2
+        )
 
     def remove_relationship(self, to_user, status):
         return Relationship.objects.filter(

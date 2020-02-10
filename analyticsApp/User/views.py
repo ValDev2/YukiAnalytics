@@ -1,13 +1,21 @@
 from django.shortcuts import render
 from rest_framework import generics
 from django.contrib.auth import get_user_model
+from .permissions import (
+    IsOwner,
+    IsNotBlocked
+)
 User = get_user_model()
 from .serializers import (
     UserSerializer,
+    UserDetailSerializer,
     RelationshipSerializer,
     CreateRelationshipSerializer
 )
 from rest_framework.permissions import IsAuthenticated
+
+
+
 
 class UserListView(generics.ListCreateAPIView):
     queryset = User.objects.all()
@@ -16,9 +24,9 @@ class UserListView(generics.ListCreateAPIView):
 
 class UserDetailView(generics.RetrieveAPIView):
     queryset = User.objects.all()
-    serializer_class = UserSerializer
+    serializer_class = UserDetailSerializer
     lookup_field = "pk"
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsNotBlocked]
 
 class UserFollowersListView(generics.ListAPIView):
     serializer_class = UserSerializer
@@ -47,7 +55,6 @@ class UserBlockedUserListView(generics.ListAPIView):
         user = self.request.user
         return user.get_blocked_users()
 
-
 class UserBlockingUserListView(generics.ListAPIView):
     serializer_class = UserSerializer
     lookup_field = "pk"
@@ -69,11 +76,20 @@ class FollowCreateView(generics.CreateAPIView):
 
 class FollowDestroyView(generics.DestroyAPIView):
     serializer_class = RelationshipSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsOwner]
+    lookup_field = "pk"
 
-    def get_queryset(self):
+    def get_object(self):
+        to_user = self.request.query_params.get("to_user", None)
         user = self.request.user
-        return user.get_following()
+        return user.get_follow_relationships().filter(to_user=to_user, status=1).filter()
 
-    def delete(self, *args, **kwargs):
-        return s
+class BlockCreateView(generics.CreateAPIView):
+    serializer_class = CreateRelationshipSerializer
+    permission_classes = [IsAuthenticated, IsOwner]
+    lookup_field = "pk"
+
+    def get_serializer_context(self, *args, **kwargs):
+        context = super().get_serializer_context()
+        context["relationship_status"] = 2
+        return context

@@ -7,7 +7,8 @@ from .views import (
     UserBlockedUserListView,
     UserBlockingUserListView,
     FollowCreateView,
-    FollowDestroyView
+    FollowDestroyView,
+    BlockCreateView
 )
 
 app_name="User"
@@ -20,5 +21,6 @@ urlpatterns = [
     path("api/users/<int:pk>/blocks/list", UserBlockedUserListView.as_view(), name="user-blocks-list"),
     path("api/users/<int:pk>/blocking/list", UserBlockingUserListView.as_view(), name="user-blocking-list"),
     path("api/follow/create", FollowCreateView.as_view(), name="follow-create"),
-    path("api/follow/delete", FollowDestroyView.as_view(), name="follow-destroy")
+    path("api/follow/delete", FollowDestroyView.as_view(), name="follow-destroy"),
+    path("api/block/create", BlockCreateView.as_view(), name="block-create")
 ]
